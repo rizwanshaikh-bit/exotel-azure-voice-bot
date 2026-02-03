@@ -42,9 +42,9 @@ All endpoints return the same JSON structure.
 ### All requests to protected routes must include the following header:
 *Authorization: Bearer YOUR_ACCESS_TOKEN*
 
-Token Lifecycle
-    1. Access Token: Short-lived (e.g., 15–60 minutes). Used for every API request.
-    2. Refresh Token: Long-lived (e.g., 7–30 days). Used only to obtain a new Access Token once the current one expires.
+### **Token Lifecycle**
+- **Access Token:** Short-lived (e.g., 15–60 minutes). Used for every API request.
+- **Refresh Token:** Long-lived (e.g., 7–30 days). Used only to obtain a new Access Token once the current one expires.
 
 ---
 

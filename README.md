@@ -341,6 +341,7 @@ You are Tanya, a female AI voicebot representing Mahindra Finance. You are profe
 ---
 ### 7. Add Update Session Config
 *POST | baseurl/api/v1/prompt*
+
 ***Note-1: If id is provided in the payload then update else new.***
 ***Note-2: All the update will be a new session config for maintaining the history so that we can go back and debug on which session it worked best. There is a flag kept for the same “previous_id”.***
 
@@ -505,6 +506,7 @@ You are Tanya, a female AI voicebot representing Mahindra Finance. You are profe
 
 ### 13. Add / Update SMS Config
 *POST | baseurl/api/v1/sms*
+
 ***Note-1: If id is provided in the payload, the system creates a new version linked via previous_id.***
 ***Note-2: This ensures a complete audit trail of what SMS text was sent during specific campaign runs.***
 
@@ -552,6 +554,7 @@ You are Tanya, a female AI voicebot representing Mahindra Finance. You are profe
 
 ### 16. Create Campaign 
 *POST | baseurl/api/v1/campaign*
+
 ***Note: This will bind technical "Caller ID" (Exophone) to the campaign.***
 
 **Payload:**

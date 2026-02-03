@@ -46,14 +46,35 @@ Token Lifecycle
     • Access Token: Short-lived (e.g., 15–60 minutes). Used for every API request.
     • Refresh Token: Long-lived (e.g., 7–30 days). Used only to obtain a new Access Token once the current one expires.
 
-**Login (Obtain Tokens)**
-POST | api/v1/auth/login
-Payload:
+---
+
+### Common Audit & Status Fields
+Every database instance created (e.g., Prompts, Sessions, Bots, SMS, Campaigns) will include these standard fields to track changes and handle soft deletes.
+
+| Field Name   | Data Type | Description |
+|-------------|----------|-------------|
+| created_by  | Int      | The ID of the user who created the record |
+| modified_by | Int      | The ID of the user who last updated the record |
+| created_at  | DateTime | Timestamp when the record was first created |
+| modified_at | DateTime | Timestamp of the most recent update |
+| is_active   | Boolean  | Flag to indicate if the record is currently usable in live campaigns |
+| is_deleted  | Boolean  | Flag used for soft deletes to keep data for historical audit purposes |
+
+---
+
+### Login (Obtain Tokens)
+*POST | api/v1/auth/login*
+
+**Payload:**
+```
 {
   "username": "user",
   "password": "secure_password_123"
 }
-Success Response:
+```
+
+**Success Response:**
+```
 {
   "success": true,
   "status": 200,
@@ -68,15 +89,22 @@ Success Response:
   ],
   "errors": null
 }
+```
+---
 
-Refresh Token
-POST | api/v1/auth/refresh
+### Refresh Token
+*POST | api/v1/auth/refresh*
 Generates a new Access Token without requiring the user to log in again.
-Payload:
+
+**Payload:**
+```
 {
   "refresh_token": "def8806ad2432_refresh_v1..."
 }
-Success Response:
+```
+
+**Success Response:**
+```
 {
   "success": true,
   "status": 200,
@@ -90,15 +118,22 @@ Success Response:
   ],
   "errors": null
 }
+```
 
-Logout / Revoke
-POST | api/v1/auth/logout
+### Logout / Revoke
+*POST | api/v1/auth/logout*
 Blacklist the current Refresh Token to end the session.
-Payload:
+
+**Payload:**
+```
 {
   "refresh_token": "def8806ad2432_refresh_v1..."
 }
-Success Response:
+
+```
+
+**Success Response:**
+```
 {
   "success": true,
   "status": 200,
@@ -106,52 +141,29 @@ Success Response:
   "data": [],
   "errors": null
 }
-Module 1: Prompt & Voice Management
-Manage the "scripts" and configuration the bot will use.
-sr no
-Endpoint Name
-Method
-URL
-Description
-1
-List Prompts
-GET
-api/v1/prompts
-Retrieves all available system prompts.
-2
-Get Prompt
-GET
-api/v1/prompts/{id}
-Fetches details of a specific prompt version.
-3
-Generate Prompt
-POST
-api/v1/generatePrompt
-Generate a prompt for review.
-4
-Create/Update Prompt
-POST
-api/v1/prompts
-Creates a new bot script/instruction.
-5
-List Sessions
-GET
-api/v1/sessions
-Lists all available and default Session configuration.
-6
-Get Session
-GET
-api/v1/sessions/{id}
-Fetches a specific Session by ID.
-7
-Create/Update Session
-POST
-api/v1/sessions
-Saves a new Session.
+```
+---
 
-1. List Prompts
-GET | baseurl/api/v1/prompts
-Response:
+## Module 1: Prompt & Voice Management
+### Manage the "scripts" and configuration the bot will use.
+
+| sr no | Endpoint Name | Method | URL | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | List Prompts | GET | `api/v1/prompts` | Retrieves all available system prompts. |
+| 2 | Get Prompt | GET | `api/v1/prompts/{id}` | Fetches details of a specific prompt version. |
+| 3 | Generate Prompt | POST | `api/v1/generatePrompt` | Generate a prompt for review. |
+| 4 | Create/Update Prompt | POST | `api/v1/prompts` | Creates a new bot script/instruction. |
+| 5 | List Sessions | GET | `api/v1/sessions` | Lists all available and default Session configuration. |
+| 6 | Get Session | GET | `api/v1/sessions/{id}` | Fetches a specific Session by ID. |
+| 7 | Create/Update Session | POST | `api/v1/sessions` | Saves a new Session. |
+
+---
+
+### 1. List Prompts
+*GET | baseurl/api/v1/prompts*
+
+**Response:**
+```
 {
   "success": true,
   "status": 200,
@@ -160,29 +172,37 @@ Response:
     {
       "id": 23,
       "prompt_id": "fbe806ad2432",
+      "previous_id": null,
       "prompt_name": "Collection_Reminder_V1",
       "text": "# Personality and Tone\n## Identity\nYou are Tanya, a female AI voicebot representing Mahindra Finance. You are professional, helpful, and empathetic. Your goal is to guide existing customers through loan qualification."
     }
   ],
   "errors": null
 }
+```
 
 
+### 2. Get Prompt
+*GET | baseurl/api/v1/prompt/fbe806ad2432*
 
-2. Get Prompt
-GET | baseurl/api/v1/prompt/fbe806ad2432
-Response:
-[{
-  "id": 23,
-  "prompt_id": "fbe806ad2432",
-  "prompt_title": "Collection_Reminder_V1",
-  "content": 
-“# Personality and Tone
-## Identity
-You are Tanya, a female AI voicebot representing Mahindra Finance. You are professional, helpful, and empathetic. Your goal is to guide existing customers through loan qualification.”
-...
-}]
-
+**Response:**
+```
+{
+  "success": true,
+  "status": 200,
+  "message": "SUCCESS",
+  "data": [
+    {
+      "id": 23,
+      "prompt_id": "fbe806ad2432",
+      "previous_id": null,
+      "prompt_title": "Collection_Reminder_V1",
+      "content": "# Personality and Tone\n## Identity\nYou are Tanya, a female AI voicebot representing Mahindra Finance. You are professional, helpful, and empathetic. Your goal is to guide existing customers through loan qualification."
+    }
+  ],
+  "errors": null
+}
+```
 
 3. Generate Prompt
 POST | baseurl/api/v1/generatePrompt
@@ -547,3 +567,7 @@ POST | baseurl/api/v1/campaign/data
 Payload (Multipart):
     • campaign_id: 8823ad2432
     • file: base_data.csv (contains serial_no, customer_name, mobile_no)
+
+
+
+
